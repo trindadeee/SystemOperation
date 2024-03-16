@@ -1,4 +1,4 @@
-package so;
+package so.memory;
 
 public class AdressMemory {
 

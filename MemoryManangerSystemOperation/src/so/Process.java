@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import so.memory.AdressMemory;
+
 public class Process {
 	
 	private String id;
