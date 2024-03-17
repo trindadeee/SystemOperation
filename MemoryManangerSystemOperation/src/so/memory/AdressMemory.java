@@ -4,7 +4,12 @@ public class AdressMemory {
 
 	private int start;
 	private int end;
-
+	
+	public AdressMemory(int start, int end) {
+		this.start = start;
+		this.end = end;
+	}
+	
 	public int getStart() {
 		return start;
 	}

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import so.cpu.CpuManager;
 import so.memory.MemoryManager;
+import so.memory.Strategy;
 import so.schedule.Schedule;
 
 public class SystemOperation {
@@ -15,7 +16,7 @@ public class SystemOperation {
 	public static Object systemcall(SystemCallType type, Process p) {
 		if (type.equals(SystemCallType.CREATE_PROCESS)) {
 			if (Objects.isNull(mm)) {
-				//mm = new MemoryManager();
+				mm = new MemoryManager(Strategy.FIRST_FIT);
 			}
 			if (Objects.isNull(cm)) {
 				cm = new CpuManager();
