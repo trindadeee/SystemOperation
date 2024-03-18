@@ -1,15 +1,27 @@
 package so.memory;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
 import so.Process;
 
 public class MemoryManager {
 
 	private String[] memory;
+	private Hashtable<String, List<FrameMemory>> logicalMemory;
+	private int pageSize;
 	private Strategy strategy;
 
-	public MemoryManager(Strategy strategy) {
+	public MemoryManager(Strategy strategy, int pageSize) {
 		this.memory = new String[128];
+		this.pageSize = pageSize;
 		this.strategy = strategy;
+		logicalMemory = new Hashtable<>();
+	}
+	
+	public MemoryManager(Strategy strategy) {
+		this(strategy, 2);
 	}
 
 	public void write(Process p) {
@@ -19,7 +31,53 @@ public class MemoryManager {
 			this.writeUsingBestFit(p);
 		} else if (strategy.equals(strategy.WORST_FIT)) {
 			this.writeUsingWirstFit(p);
+		}else if (strategy.equals(strategy.PAGING)) {
+			this.writeUsingPaging(p);
 		}
+	}
+	private void delete(Process p) {
+		List<FrameMemory> frames = this.logicalMemory.get(p.getId());
+		for (int i = 0; i < frames.size(); i++) {
+			FrameMemory actuallyFrame = frames.get(i);
+			for(int j = actuallyFrame.getFrameNumber(); j < actuallyFrame.getOffset(); j++) {
+				this.memory[j] = null;
+				
+			}
+		}
+		this.logicalMemory.remove(p.getId());
+	}
+	
+	private void writeUsingPaging(Process p) {
+		List<FrameMemory> frames = this.getFrames(p);
+		if (frames == null) {
+			System.out.println("Não há espaço sulficiente em memória");
+		}else {
+			for (int i = 0; i < frames.size(); i++) {
+				FrameMemory actuallyFrame = frames.get(i);
+				for(int j = actuallyFrame.getFrameNumber(); j < actuallyFrame.getOffset(); j++) {
+					this.memory[j] = p.getId();
+					
+				}
+			}
+		}
+		this.logicalMemory.put(p.getId(), frames);
+		printMemoryStatus();
+	}
+	
+	private List<FrameMemory> getFrames(Process p){
+		List<FrameMemory> frames = new ArrayList<>();
+		int increment = 0;
+		for (int page=0; page < this.memory.length; page += pageSize) {
+			if(this.memory[page] == null) {
+				int offset = page + this.pageSize;
+				frames.add(new FrameMemory(page, offset));
+				increment += this.pageSize;
+				if (increment == p.getSizeInMemory()) {
+					return frames;
+				}
+			}
+		}
+		return null;
 	}
 
 	private void writeUsingWirstFit(Process p) {

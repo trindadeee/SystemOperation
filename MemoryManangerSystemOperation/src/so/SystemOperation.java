@@ -16,7 +16,7 @@ public class SystemOperation {
 	public static Object systemcall(SystemCallType type, Process p) {
 		if (type.equals(SystemCallType.CREATE_PROCESS)) {
 			if (Objects.isNull(mm)) {
-				mm = new MemoryManager(Strategy.FIRST_FIT);
+				mm = new MemoryManager(Strategy.PAGING);
 			}
 			if (Objects.isNull(cm)) {
 				cm = new CpuManager();

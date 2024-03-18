@@ -12,7 +12,8 @@ public class Execute {
 		Process p3 = (Process)SystemOperation.systemcall(SystemCallType.CREATE_PROCESS, null);
 		SystemOperation.systemcall(SystemCallType.WRITE_PROCESS, p3);
 		
-		SystemOperation.systemcall(SystemCallType.DELETE_PROCESS, p3);
+		
+		
 	}
 	
 }
