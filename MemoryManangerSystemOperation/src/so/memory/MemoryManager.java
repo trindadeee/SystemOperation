@@ -14,12 +14,12 @@ public class MemoryManager {
 	private Strategy strategy;
 
 	public MemoryManager(Strategy strategy, int pageSize) {
-		this.memory = new String[128];
+		this.memory = new String[12];
 		this.pageSize = pageSize;
 		this.strategy = strategy;
 		logicalMemory = new Hashtable<>();
 	}
-	
+
 	public MemoryManager(Strategy strategy) {
 		this(strategy, 2);
 	}
@@ -30,61 +30,91 @@ public class MemoryManager {
 		} else if (strategy.equals(strategy.BEST_FIT)) {
 			this.writeUsingBestFit(p);
 		} else if (strategy.equals(strategy.WORST_FIT)) {
-			this.writeUsingWirstFit(p);
-		}else if (strategy.equals(strategy.PAGING)) {
-			this.writeUsingPaging(p);
+			this.writeUsingWorstFit(p);
 		}
-	}
-	private void delete(Process p) {
-		List<FrameMemory> frames = this.logicalMemory.get(p.getId());
-		for (int i = 0; i < frames.size(); i++) {
-			FrameMemory actuallyFrame = frames.get(i);
-			for(int j = actuallyFrame.getFrameNumber(); j < actuallyFrame.getOffset(); j++) {
-				this.memory[j] = null;
-				
-			}
-		}
-		this.logicalMemory.remove(p.getId());
 	}
 	
-	private void writeUsingPaging(Process p) {
-		List<FrameMemory> frames = this.getFrames(p);
-		if (frames == null) {
-			System.out.println("Não há espaço sulficiente em memória");
-		}else {
-			for (int i = 0; i < frames.size(); i++) {
-				FrameMemory actuallyFrame = frames.get(i);
-				for(int j = actuallyFrame.getFrameNumber(); j < actuallyFrame.getOffset(); j++) {
-					this.memory[j] = p.getId();
-					
-				}
-			}
-		}
-		this.logicalMemory.put(p.getId(), frames);
-		printMemoryStatus();
-	}
-	
-	private List<FrameMemory> getFrames(Process p){
-		List<FrameMemory> frames = new ArrayList<>();
-		int increment = 0;
-		for (int page=0; page < this.memory.length; page += pageSize) {
-			if(this.memory[page] == null) {
-				int offset = page + this.pageSize;
-				frames.add(new FrameMemory(page, offset));
-				increment += this.pageSize;
-				if (increment == p.getSizeInMemory()) {
-					return frames;
-				}
-			}
-		}
-		return null;
+	public void deleteProcess(Process p) {
+	    for (int i = 0; i < memory.length; i++) {
+	        if (memory[i] != null && memory[i].equals(p.getId())) {
+	            // Encontramos uma posição ocupada pelo processo a ser excluído
+	            memory[i] = null; // Liberando a posição na memória
+	        }
+	    }
+	    System.out.println("Processo " + p.getId() + " removido da memória.");
+	    printMemoryStatus(); // Exibe o status atual da memória após a exclusão
 	}
 
-	private void writeUsingWirstFit(Process p) {
+	private void writeUsingWorstFit(Process p) {
+		int maxSize = -1;
+		int start = -1;
+		int i = 0;
 
+		while (true) {
+			int j;
+			while (i < memory.length) {
+				if (memory[i] == null) {
+					for (j = i; j < memory.length && memory[j] == null; ++j) {
+					}
+
+					int blockSize = j - i;
+					if (blockSize >= p.getSizeInMemory() && blockSize > maxSize) {
+						maxSize = blockSize;
+						start = i;
+					}
+
+					i = j;
+				} else {
+					++i;
+				}
+			}
+
+			if (start != -1) {
+				i = start + p.getSizeInMemory() - 1;
+
+				for (j = start; j <= i; ++j) {
+					memory[j] = p.getId();
+				}
+
+				printMemoryStatus();
+			} else {
+				System.out.println("Sem espaço suficiente para alocar o processo: " + p.getId());
+			}
+
+			return;
+		}
 	}
 
 	private void writeUsingBestFit(Process p) {
+		int minSize = Integer.MAX_VALUE;
+		int start = -1;
+
+		for (int i = 0; i < memory.length;) {
+			if (memory[i] == null) {
+				int j = i;
+				while (j < memory.length && memory[j] == null) {
+					j++;
+				}
+				int blockSize = j - i;
+				if (blockSize >= p.getSizeInMemory() && blockSize < minSize) {
+					minSize = blockSize;
+					start = i;
+				}
+				i = j + 1;
+			} else {
+				i++;
+			}
+		}
+
+		if (start != -1) {
+			int end = start + p.getSizeInMemory() - 1;
+			for (int j = start; j <= end; j++) {
+				memory[j] = p.getId();
+			}
+			printMemoryStatus();
+		} else {
+			System.out.println("Não há espaço suficiente na memória para alocar o processo: " + p.getId());
+		}
 
 	}
 
@@ -95,8 +125,7 @@ public class MemoryManager {
 				if (actualSize > 0) {
 					if (p.getSizeInMemory() <= actualSize) {
 						int start = (i - actualSize);
-						int end = i;
-						for (int j = start; j < p.getSizeInMemory(); j++) {
+						for (int j = start; j < start + p.getSizeInMemory(); j++) {
 							memory[j] = p.getId();
 						}
 						break;
@@ -118,13 +147,14 @@ public class MemoryManager {
 				actualSize = 0;
 			}
 		}
+		System.out.println("------------------------------------------------------");
 		printMemoryStatus();
-
+		System.out.println("Memoria atual");
 	}
 
 	private void printMemoryStatus() {
 		for (int i = 0; i < memory.length; i++) {
-			System.out.print(memory[i] + " | ");
+			System.out.println(memory[i] + " | ");
 
 		}
 	}

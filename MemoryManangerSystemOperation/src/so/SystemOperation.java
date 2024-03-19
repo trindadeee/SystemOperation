@@ -13,23 +13,23 @@ public class SystemOperation {
 	public static CpuManager cm;
 	public static Schedule schedule;
 
-	public static Object systemcall(SystemCallType type, Process p) {
+	public static Object systemcall(SystemCallType type, Process p, int sizeInMemory) {
 		if (type.equals(SystemCallType.CREATE_PROCESS)) {
 			if (Objects.isNull(mm)) {
-				mm = new MemoryManager(Strategy.PAGING);
+				mm = new MemoryManager(Strategy.BEST_FIT);
 			}
 			if (Objects.isNull(cm)) {
 				cm = new CpuManager();
 			}
 
-			return new Process();
+			return new Process(sizeInMemory);
 		} else if (type.equals(SystemCallType.WRITE_PROCESS)) {
 			mm.write(p);
 
 		} else if (type.equals(SystemCallType.READ_PROCESS)) {
 			//
 		} else if (type.equals(SystemCallType.DELETE_PROCESS)) {
-			//
+			mm.deleteProcess(p);
 		}
 		return null;
 	}
