@@ -14,13 +14,11 @@ public class Process {
 	private List<Process> process;
 	private int instructions;
 	private AdressMemory adress;
+	
 
 	public Process(int sizeInMemory) {
 		this.id = UUID.randomUUID().toString();
 		this.sizeInMemory = sizeInMemory;
-//		Random r = new Random();
-//		List<Integer> numbers = Arrays.asList(1, 2, 4, 6, 8, 10, 20, 50, 100);
-//		this.sizeInMemory = numbers.get(r.nextInt(numbers.size()));
 	}
 
 	public String getId() {

@@ -37,12 +37,11 @@ public class MemoryManager {
 	public void deleteProcess(Process p) {
 	    for (int i = 0; i < memory.length; i++) {
 	        if (memory[i] != null && memory[i].equals(p.getId())) {
-	            // Encontramos uma posição ocupada pelo processo a ser excluído
-	            memory[i] = null; // Liberando a posição na memória
+	            memory[i] = null; 
 	        }
 	    }
 	    System.out.println("Processo " + p.getId() + " removido da memória.");
-	    printMemoryStatus(); // Exibe o status atual da memória após a exclusão
+	    printMemoryStatus();
 	}
 
 	private void writeUsingWorstFit(Process p) {
@@ -75,8 +74,9 @@ public class MemoryManager {
 				for (j = start; j <= i; ++j) {
 					memory[j] = p.getId();
 				}
-
+				System.out.println("------------------------------------------------------");
 				printMemoryStatus();
+				System.out.println("Memoria atual");
 			} else {
 				System.out.println("Sem espaço suficiente para alocar o processo: " + p.getId());
 			}
@@ -111,7 +111,9 @@ public class MemoryManager {
 			for (int j = start; j <= end; j++) {
 				memory[j] = p.getId();
 			}
+			System.out.println("------------------------------------------------------");
 			printMemoryStatus();
+			System.out.println("Memoria atual");
 		} else {
 			System.out.println("Não há espaço suficiente na memória para alocar o processo: " + p.getId());
 		}
@@ -119,38 +121,35 @@ public class MemoryManager {
 	}
 
 	private void writeUsingFirstFit(Process p) {
-		int actualSize = 0;
-		for (int i = 0; i < memory.length; i++) {
-			if (i == (memory.length - 1)) {
-				if (actualSize > 0) {
-					if (p.getSizeInMemory() <= actualSize) {
-						int start = (i - actualSize);
-						for (int j = start; j < start + p.getSizeInMemory(); j++) {
-							memory[j] = p.getId();
-						}
-						break;
-					}
-				}
-			} else if (memory[i] == null) {
-				actualSize++;
-			} else {
-				if (actualSize > 0) {
-					if (p.getSizeInMemory() <= actualSize) {
-						int start = i - actualSize;
-						int end = i - 1;
-						for (int j = start; j <= end; j++) {
-							memory[j] = p.getId();
-						}
-						break;
-					}
-				}
-				actualSize = 0;
-			}
-		}
-		System.out.println("------------------------------------------------------");
-		printMemoryStatus();
-		System.out.println("Memoria atual");
+	    int actualSize = 0;
+	    boolean spaceFound = false; 
+
+	    for (int i = 0; i < memory.length; i++) {
+	        if (memory[i] == null) {
+	            actualSize++; 
+	            if (actualSize >= p.getSizeInMemory()) { 
+	                spaceFound = true; 
+	                int start = i - actualSize + 1; 
+	                for (int j = start; j < start + p.getSizeInMemory(); j++) {
+	                    memory[j] = p.getId(); 
+	                }
+	                break;
+	            }
+	        } else {
+	            actualSize = 0; 
+	        }
+	    }
+
+	    if (!spaceFound) {
+	        System.out.println("Não há espaço suficiente na memória para alocar o processo " + p.getId());
+	    }
+
+	    System.out.println("------------------------------------------------------");
+	    printMemoryStatus();
+	    System.out.println("Memoria atual");
 	}
+
+
 
 	private void printMemoryStatus() {
 		for (int i = 0; i < memory.length; i++) {
