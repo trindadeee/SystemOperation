@@ -14,7 +14,7 @@ public class MemoryManager {
 	private Strategy strategy;
 
 	public MemoryManager(Strategy strategy, int pageSize) {
-		this.memory = new String[12];
+		this.memory = new String[128];
 		this.pageSize = pageSize;
 		this.strategy = strategy;
 		logicalMemory = new Hashtable<>();
@@ -36,11 +36,11 @@ public class MemoryManager {
 	
 	public void deleteProcess(Process p) {
 	    for (int i = 0; i < memory.length; i++) {
-	        if (memory[i] != null && memory[i].equals(p.getId())) {
+	        if (memory[i] != null && memory[i].equals(p.getName())) {
 	            memory[i] = null; 
 	        }
 	    }
-	    System.out.println("Processo " + p.getId() + " removido da memória.");
+	    System.out.println("Processo " + p.getName() + " removido da memória.");
 	    printMemoryStatus();
 	}
 
@@ -72,13 +72,13 @@ public class MemoryManager {
 				i = start + p.getSizeInMemory() - 1;
 
 				for (j = start; j <= i; ++j) {
-					memory[j] = p.getId();
+					memory[j] = p.getName();
 				}
 				System.out.println("------------------------------------------------------");
 				printMemoryStatus();
 				System.out.println("Memoria atual");
 			} else {
-				System.out.println("Sem espaço suficiente para alocar o processo: " + p.getId());
+				System.out.println("Sem espaço suficiente para alocar o processo: " + p.getName());
 			}
 
 			return;
@@ -109,13 +109,13 @@ public class MemoryManager {
 		if (start != -1) {
 			int end = start + p.getSizeInMemory() - 1;
 			for (int j = start; j <= end; j++) {
-				memory[j] = p.getId();
+				memory[j] = p.getName();
 			}
 			System.out.println("------------------------------------------------------");
 			printMemoryStatus();
 			System.out.println("Memoria atual");
 		} else {
-			System.out.println("Não há espaço suficiente na memória para alocar o processo: " + p.getId());
+			System.out.println("Não há espaço suficiente na memória para alocar o processo: " + p.getName());
 		}
 
 	}
@@ -131,7 +131,7 @@ public class MemoryManager {
 	                spaceFound = true; 
 	                int start = i - actualSize + 1; 
 	                for (int j = start; j < start + p.getSizeInMemory(); j++) {
-	                    memory[j] = p.getId(); 
+	                    memory[j] = p.getName(); 
 	                }
 	                break;
 	            }
@@ -141,7 +141,7 @@ public class MemoryManager {
 	    }
 
 	    if (!spaceFound) {
-	        System.out.println("Não há espaço suficiente na memória para alocar o processo " + p.getId());
+	        System.out.println("Não há espaço suficiente na memória para alocar o processo " + p.getName());
 	    }
 
 	    System.out.println("------------------------------------------------------");

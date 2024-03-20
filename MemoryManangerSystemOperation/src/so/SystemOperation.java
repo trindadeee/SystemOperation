@@ -13,7 +13,7 @@ public class SystemOperation {
 	public static CpuManager cm;
 	public static Schedule schedule;
 
-	public static Object systemcall(SystemCallType type, Process p, int sizeInMemory) {
+	public static Object systemcall(SystemCallType type, Process p, int sizeInMemory, String name) {
 		if (type.equals(SystemCallType.CREATE_PROCESS)) {
 			if (Objects.isNull(mm)) {
 				mm = new MemoryManager(Strategy.BEST_FIT);
@@ -22,7 +22,7 @@ public class SystemOperation {
 				cm = new CpuManager();
 			}
 
-			return new Process(sizeInMemory);
+			return new Process(sizeInMemory, name);
 		} else if (type.equals(SystemCallType.WRITE_PROCESS)) {
 			mm.write(p);
 

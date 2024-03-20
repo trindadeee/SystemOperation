@@ -14,11 +14,22 @@ public class Process {
 	private List<Process> process;
 	private int instructions;
 	private AdressMemory adress;
+	private String name;
+
 	
 
-	public Process(int sizeInMemory) {
+	public Process(int sizeInMemory, String name) {
 		this.id = UUID.randomUUID().toString();
 		this.sizeInMemory = sizeInMemory;
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getId() {
