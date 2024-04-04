@@ -5,33 +5,31 @@ import java.util.Hashtable;
 import java.util.List;
 
 import so.Process;
+import so.SubProcess;
 
 public class MemoryManager {
 
-	private String[] memory;
-	private Hashtable<String, List<FrameMemory>> logicalMemory;
+	private SubProcess[][] memory;
+	private Hashtable<String, FrameMemory> logicalMemory;
 	private int pageSize;
-	private Strategy strategy;
+	private int sizeMemory;
 
-	public MemoryManager(Strategy strategy, int pageSize) {
-		this.memory = new String[128];
+	public MemoryManager(int sizeMemory, int pageSize) {
+		this.memory = new SubProcess[sizeMemory][];
 		this.pageSize = pageSize;
-		this.strategy = strategy;
 		logicalMemory = new Hashtable<>();
 	}
 
-	public MemoryManager(Strategy strategy) {
-		this(strategy, 2);
-	}
+	
 
 	public void write(Process p) {
-		if (strategy.equals(strategy.FIRST_FIT)) {
+		/*if (strategy.equals(strategy.FIRST_FIT)) {
 			this.writeUsingFirstFit(p);
 		} else if (strategy.equals(strategy.BEST_FIT)) {
 			this.writeUsingBestFit(p);
 		} else if (strategy.equals(strategy.WORST_FIT)) {
 			this.writeUsingWorstFit(p);
-		}
+		}*/
 	}
 	
 	public void deleteProcess(Process p) {
@@ -72,7 +70,7 @@ public class MemoryManager {
 				i = start + p.getSizeInMemory() - 1;
 
 				for (j = start; j <= i; ++j) {
-					memory[j] = p.getName();
+					//memory[j] = p.getName();
 				}
 				System.out.println("------------------------------------------------------");
 				printMemoryStatus();
@@ -109,7 +107,7 @@ public class MemoryManager {
 		if (start != -1) {
 			int end = start + p.getSizeInMemory() - 1;
 			for (int j = start; j <= end; j++) {
-				memory[j] = p.getName();
+				//memory[j] = p.getName();
 			}
 			System.out.println("------------------------------------------------------");
 			printMemoryStatus();
@@ -131,7 +129,7 @@ public class MemoryManager {
 	                spaceFound = true; 
 	                int start = i - actualSize + 1; 
 	                for (int j = start; j < start + p.getSizeInMemory(); j++) {
-	                    memory[j] = p.getName(); 
+	                    //memory[j] = p.getName(); 
 	                }
 	                break;
 	            }

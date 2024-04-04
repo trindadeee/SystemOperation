@@ -1,5 +1,6 @@
 package so;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,19 +10,28 @@ public class Process {
 
 	private String id;
 	private int sizeInMemory;
-	private int timeToExecute;
-	private int priority;
-	private List<Process> process;
-	private int instructions;
-	private AdressMemory adress;
+	private List<SubProcess> process;
+	public static int count;
+	private static int instructionNumber = 7;
+	private static int timeToExecute = 5000;
 	private String name;
 
-	
-
 	public Process(int sizeInMemory, String name) {
-		this.id = UUID.randomUUID().toString();
+		count++;
+		this.id = "p" + count;
 		this.sizeInMemory = sizeInMemory;
+		this.process = this.getprocess();
 		this.name = name;
+	}
+
+	private List<SubProcess> getprocess() {
+		if (this.process == null) {
+			this.process = new LinkedList<>();
+			for (int i = 0; i < this.sizeInMemory; i++) {
+				this.process.add(new SubProcess(this.getId(), instructionNumber, timeToExecute));
+			}
+		}
+		return this.process;
 	}
 
 	public String getName() {
@@ -46,14 +56,6 @@ public class Process {
 
 	public void setSizeInMemory(int sizeInMemory) {
 		this.sizeInMemory = sizeInMemory;
-	}
-
-	public AdressMemory getAdress() {
-		return adress;
-	}
-
-	public void setAdress(AdressMemory adress) {
-		this.adress = adress;
 	}
 
 }
