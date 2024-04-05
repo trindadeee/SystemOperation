@@ -1,7 +1,5 @@
 package so;
 
-import so.memory.AdressMemory;
-
 public class SubProcess {
 
 	private String id;
@@ -10,13 +8,13 @@ public class SubProcess {
 	public static int count;
 	// private AdressMemory adress;
 
-	public SubProcess(String processID, int instructionsNumber, int timeToExecute) {
-		count++;
-		this.id = processID + count;
+	public SubProcess(String processId, int instructionsNumber) {
+		this.id = processId + count;
 		this.instructions = instructionsNumber;
-		this.timeToExecute = timeToExecute;
+		count++;
 	}
-
+	
+	
 	public String getId() {
 		return id;
 	}

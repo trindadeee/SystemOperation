@@ -23,10 +23,10 @@ public class SystemOperation {
 			}
 
 		}
-		return new Process(sizeInMemory, null);
+		return new Process(sizeInMemory);
 	}
 
-	public static void systemcall(SystemCallType type, Process p, String name) {
+	public static void systemCall(SystemCallType type, Process p) {
 		if (type.equals(SystemCallType.WRITE_PROCESS)) {
 			mm.write(p);
 

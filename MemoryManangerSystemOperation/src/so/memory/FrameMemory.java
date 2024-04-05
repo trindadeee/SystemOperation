@@ -1,4 +1,4 @@
-package so.memory;
+	package so.memory;
 
 public class FrameMemory {
 
@@ -6,11 +6,14 @@ public class FrameMemory {
 	private int offSet;
 
 	public FrameMemory(int frameNumber, int offSet) {
-		super();
 		this.frameNumber = frameNumber;
 		this.offSet = offSet;
 	}
 
+	public FrameMemory(int pageNumber) {
+		this(pageNumber, 0);
+	}
+	
 	public int getFrameNumber() {
 		return frameNumber;
 	}
