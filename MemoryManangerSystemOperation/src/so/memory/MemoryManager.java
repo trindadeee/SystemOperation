@@ -16,10 +16,11 @@ public class MemoryManager {
 	public static int numberInstrictionsSubProcess = 7;
 
 	public MemoryManager(int sizeMemory, int pageSize) {
-		this.memory = new SubProcess[sizeMemory][pageSize];
-		logicalMemory = new Hashtable<>();
 		this.pageSize = pageSize;
 		this.sizeMemory = sizeMemory;
+		int pages = (int) Math.ceil(this.sizeMemory / this.pageSize);
+		this.memory = new SubProcess[pages][pageSize];
+		this.logicalMemory = new Hashtable<>();
 	}
 
 	public void write(Process p) {
@@ -41,6 +42,8 @@ public class MemoryManager {
 		} else {
 
 		}
+		//zerando contador
+		SubProcess.resetCount();
 		this.printMemoryStatus();
 	}
 
@@ -86,9 +89,15 @@ public class MemoryManager {
 		printMemoryStatus();
 	}
 
-//	private List<String> read(String ProcessId){
-//		
-//	}
+	public List<SubProcess> read(Process p){
+		List<String> ids = p.getprocess();
+		List<SubProcess> sps = new LinkedList<>();
+		for(String id : ids) {
+			FrameMemory fm = this.logicalMemory.get(id);
+			sps.add(this.memory[fm.getFrameNumber()][fm.getOffSet()]);
+		}
+		return sps;
+	}
 	
 	
 	

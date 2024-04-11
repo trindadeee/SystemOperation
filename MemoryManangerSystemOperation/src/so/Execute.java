@@ -12,11 +12,11 @@ public class Execute {
 		Process p3 = (Process)SystemOperation.systemCall(SystemCallType.CREATE_PROCESS, 25);
 		SystemOperation.systemCall(SystemCallType.WRITE_PROCESS, p3);
 		
-		Process p4 = (Process)SystemOperation.systemCall(SystemCallType.CREATE_PROCESS, 28);
-		SystemOperation.systemCall(SystemCallType.WRITE_PROCESS, p4);
-	
-		Process p5 = (Process)SystemOperation.systemCall(SystemCallType.CREATE_PROCESS, 2);
-		SystemOperation.systemCall(SystemCallType.WRITE_PROCESS, p5);
+//		Process p4 = (Process)SystemOperation.systemCall(SystemCallType.CREATE_PROCESS, 28);
+//		SystemOperation.systemCall(SystemCallType.WRITE_PROCESS, p4);
+//	
+//		Process p5 = (Process)SystemOperation.systemCall(SystemCallType.CREATE_PROCESS, 2);
+//		SystemOperation.systemCall(SystemCallType.WRITE_PROCESS, p5);
 		
 
 
